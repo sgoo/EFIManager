@@ -89,6 +89,10 @@ namespace EFIManager
 		}
 
 
+		/// <summary>
+		/// This code was adapted from http://ithoughthecamewithyou.com/post/Reboot-computer-in-C-NET.aspx
+		/// </summary>
+
 
 		public void UpgradePrivilage()
 		{
