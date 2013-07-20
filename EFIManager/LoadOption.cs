@@ -291,12 +291,56 @@ namespace EFIManager
 
 		public override string ToString()
 		{
-			return String.Format("EndOfHardware DevicePath: {{{0}, SubType: {1}}}", SubType==0x01?"End This Instance of a Device Path ": "End Entire Device Path", SubType.ToString("X2"));
+			return String.Format("EndOfHardware DevicePath: {{{0}, SubType: 0x{1}}}", SubType == 0x01 ? "End This Instance of a Device Path " : "End Entire Device Path", SubType.ToString("X2"));
+		}
+	}
+
+	[DevicePath(Type = 0x05, SubType = 0x01)]
+	public class BIOSBootSpecificationDevicePath : DevicePath
+	{
+		public BIOSBootSpecificationDevicePath(DevicePath dp) : base(dp) { }
+
+		public ushort DeviceType
+		{
+			get
+			{
+				return BitConverter.ToUInt16(buf, offset + 4);
+			}
+		}
+
+		public ushort StatusFlag
+		{
+			get
+			{
+				return BitConverter.ToUInt16(buf, offset + 6);
+			}
+		}
+
+		private string description = null;
+		public string Description
+		{
+			get
+			{
+				if (description == null)
+				{
+					if (Length > 10)
+					{
+						description = Encoding.Unicode.GetString(buf, offset + 8, Length - 10);
+					}
+					description = "";
+				}
+				return description;
+			}
+		}
+
+		public override string ToString()
+		{
+			return String.Format("BIOSBootSpecification DevicePath: {{DeviceType: 0x{0}, StatusFlag: 0x{1}, Description: {2}}}", DeviceType.ToString("X4"), StatusFlag.ToString("X4"), Description);
 		}
 	}
 
 
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple=true)]
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 	public class DevicePathAttribute : Attribute
 	{
 		public int Type { get; set; }
