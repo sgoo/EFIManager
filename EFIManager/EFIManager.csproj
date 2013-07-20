@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EFIException.cs" />
     <Compile Include="FirmwareManager.cs" />
     <Compile Include="LoadOption.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

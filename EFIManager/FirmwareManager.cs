@@ -53,6 +53,31 @@ namespace EFIManager
 			return new LoadOption(buf);
 		}
 
+		public UInt16 GetBootNext()
+		{
+			byte[] buf = GetEfiVar("BootNext");
+			if (buf.Length != 2)
+			{
+				throw new EFIException("BootNext should be two bytes returned data was {0} bytes", buf.Length);
+			}
+			return BitConverter.ToUInt16(buf, 0);
+		}
+
+		public UInt16 GetBootCurrent()
+		{
+			byte[] buf = GetEfiVar("BootCurrent");
+			if (buf.Length != 2)
+			{
+				throw new EFIException("BootCurrent should be two bytes returned data was {0} bytes", buf.Length);
+			}
+			return BitConverter.ToUInt16(buf, 0);
+		}
+
+
+		public byte[] GetEfiVar(string lpName)
+		{
+			return GetEfiVar(lpName, EFI_GLOBAL_VARIABLE);
+		}
 
 		public byte[] GetEfiVar(string lpName, string lpGuid)
 		{
@@ -69,6 +94,7 @@ namespace EFIManager
 
 			if (Marshal.GetLastWin32Error() != 0)
 			{
+				// TODO: understand errors that should be EFIException's (e.g. BootNext not set)
 				throw new Win32Exception(Marshal.GetLastWin32Error());
 			}
 			Array.Resize(ref buf, (int)size);

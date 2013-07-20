@@ -32,7 +32,7 @@ namespace EFIManager
 		private UInt16? filePathListLength = null;
 		private String description = null;
 		private DevicePath[] filePathList = null;
-		private byte[] optionalData;
+		private byte[] optionalData = null;
 
 
 		public LoadOption(byte[] buf)
@@ -92,10 +92,26 @@ namespace EFIManager
 			}
 		}
 
+		public byte[] OptionalData
+		{
+			get
+			{
+				if (optionalData == null)
+				{
+					int start = 4 + 2 + Description.Length + FilePathListLength;
+					int len = buf.Length - start;
+					optionalData = new byte[len];
+					Array.Copy(buf, start, optionalData, 0, len);
+				}
+				return optionalData;
+			}
+		}
 
 
 	}
 
+
+	#region DevicePath Types
 
 	public class DevicePath
 	{
@@ -368,4 +384,6 @@ namespace EFIManager
 
 
 	}
+
+	#endregion
 }
